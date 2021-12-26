@@ -4,6 +4,7 @@ import Login from './Login'
 import Dashboard from './Dashboard'
 import { SocketProvider } from '../contexts/SocketProvider'
 import { TicketProvider } from '../contexts/TicketProvider'
+import { UsersProvider } from '../contexts/UsersProvider'
 
 function App() {
 
@@ -11,9 +12,11 @@ function App() {
 
   const dashboard = (
     <SocketProvider id = {id}>
-      <TicketProvider id = {id}>
-         <Dashboard id ={id} />
-      </TicketProvider>
+        <UsersProvider id ={id}>
+          <TicketProvider id = {id}>
+            <Dashboard id ={id} />
+         </TicketProvider>
+        </UsersProvider>
     </SocketProvider>
   )
 

@@ -5,9 +5,14 @@ import '../css/Login.css'
 
 export default function Login( { onIdSubmit } ){
     const idRef = useRef()
+    
+
+    let warning = ""
 
     function handleSubmit(e){
         e.preventDefault()
+
+        warning = ""
         
         onIdSubmit(idRef.current.value)
     }
@@ -19,6 +24,7 @@ export default function Login( { onIdSubmit } ){
 
     return (
         <Container className="loginContainer">
+          {warning}
           <Form onSubmit={handleSubmit} className="w-100">
             <Form.Group>
               <Form.Label>Enter Your Id</Form.Label>

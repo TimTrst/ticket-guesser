@@ -1,15 +1,18 @@
 const io = require('socket.io')(5000)
 
 let connectedUsers = []
+let counter = 0
 
 io.on('connection', socket => {
     var room = "ticketRoom"
 
-    const id = socket.handshake.query.id
+    let id = socket.handshake.query.id
 
-    if(!(connectedUsers.find((user) => id == user))){
-        connectedUsers.push(id)
+    if((connectedUsers.find((user) => id == user))){
+        id = id + " (" + counter + ")"
+        counter++
     }
+    connectedUsers.push(id)
 
     socket.join(id)
     socket.join(room)
@@ -19,6 +22,13 @@ io.on('connection', socket => {
         console.log(connectedUsers)
     })
     
-
-
+    socket.on('disconnect', function() {
+        console.log("disconnect: ", socket.id);
+        
+        const index = connectedUsers.indexOf(id)
+        if(index > -1){
+            connectedUsers.splice(index, 1)
+        }
+        io.to(room).emit('setNewUsers', connectedUsers)
+    });
 })
