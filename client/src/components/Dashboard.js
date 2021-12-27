@@ -17,7 +17,10 @@ export default function Dashboard({id}) {
     function handleSubmit(e){
         e.preventDefault()
         
-        createTicket(idRef.current.value)
+        if(socket != null){
+          socket.emit('createTicket', idRef.current.value)
+          //createTicket(idRef.current.value)
+        }
     }
 
     function handleResetLocalStorage(){
@@ -43,8 +46,8 @@ export default function Dashboard({id}) {
           <ListGroup variant="flush">
               {tickets.map((ticket, index) => (
                 <ListGroup.Item key={index}>
-                    <Tickets ticket={ticket} id={id} index={index}/>
-                  </ListGroup.Item>
+                  <Tickets ticket={ticket} id={id} index={index}/>
+                </ListGroup.Item>
               ))}
           </ListGroup>
         </Card>    

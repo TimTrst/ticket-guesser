@@ -9,20 +9,28 @@ export function useTickets() {
   return useContext(TicketContext)
 }
 
-export function TicketProvider({ id, children }) {
+export function TicketProvider({ children }) {
   const [tickets, setTickets] = useLocalStorage('tickets', [])
 
-  //const socket = useSocket()
+  const socket = useSocket()
 
-  function createTicket(ticketName) {
+  const createTicket = useCallback((ticketName) => {
     console.log(ticketName)
     setTickets(prevTickets => {
       return [...prevTickets, { ticketName, employee: [] }]
     })
-  }
+  },[setTickets])
+
+  useEffect(()=> {
+    if(socket == null) return
+
+    socket.on('createTicket', createTicket)
+
+    return () => socket.off('createTicket')
+  },[socket, createTicket])
 
   const addGuessToTicket = useCallback((guess) => {
-    if(Object.keys(guess).length === 0) return console.log("fuck")
+    if(Object.keys(guess).length === 0) return
 
     let ticketsTemp = [...tickets]
     let ticketToChange = {...ticketsTemp[guess.ticketId]}
@@ -37,20 +45,26 @@ export function TicketProvider({ id, children }) {
         ticketToChange.employee.find(employee => employee.name == guess.employee).guess = guess.guess
         
         ticketsTemp[guess.ticketId] = ticketToChange
-        console.log(ticketsTemp)
+        
         return setTickets([...ticketsTemp])
       }
       
       ticketToChange.employee.push(guessToAdd)
       ticketsTemp[guess.ticketId] = ticketToChange
-
-      console.log(ticketsTemp)
       
       return setTickets([...ticketsTemp])
     }
-
     return
   }, [tickets])
+
+  useEffect(() => {
+    if(socket == null) return
+    
+    socket.on('addGuessToTicket', addGuessToTicket)
+
+    return () => socket.off('addGuessToTicket')
+  }, [socket, addGuessToTicket])
+
 
   const value = {
     tickets: tickets,

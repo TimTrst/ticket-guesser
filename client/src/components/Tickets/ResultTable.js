@@ -33,7 +33,8 @@ export default function ResultTable({ index }) {
                 </tr>
             </thead>
             <tbody>
-                {tickets[index].employee.map(function(empList, i){
+                {tickets.length > 0 && averageTimeGuessed > 0 &&
+                tickets[index].employee.map(function(empList, i){
                     return (
                     <tr key = {i}>
                         <td>{i}</td>
@@ -41,7 +42,7 @@ export default function ResultTable({ index }) {
                         <td>{empList.guess}</td>
                         <td>{averageTimeGuessed}</td>
                     </tr>)
-                })}
+                })} 
             </tbody>
         </Table>
     )

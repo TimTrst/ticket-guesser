@@ -1,5 +1,4 @@
 import React, {useState,useEffect, useCallback, useContext } from 'react'
-import useLocalStorage from '../hooks/useLocalStorage';
 
 import { useSocket } from '../contexts/SocketProvider';
 
@@ -17,15 +16,12 @@ export function UsersProvider({ children }) {
     useEffect(() => {
         if(socket == null) return
 
-        console.log(socket)
-
         socket.emit('returnUsers')
         
     }, [socket])
     
     const setNewUsers = useCallback((connectedUsers) => {
         setUsers(connectedUsers)
-        console.log(users)
     }, [setUsers])
 
     useEffect(() => {

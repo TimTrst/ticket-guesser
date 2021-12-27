@@ -31,4 +31,12 @@ io.on('connection', socket => {
         }
         io.to(room).emit('setNewUsers', connectedUsers)
     });
+
+    socket.on('createTicket', (ticketName) => {
+        io.to(room).emit('createTicket', ticketName)
+    })
+
+    socket.on('addGuessToTicket', (guess) => {
+        io.to(room).emit('addGuessToTicket', guess)
+    })
 })

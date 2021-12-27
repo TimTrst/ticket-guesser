@@ -11,7 +11,7 @@ export default function Users({id}) {
     return (
         <Card>
             <Card.Title>Connected Users</Card.Title>
-            <ListGroup variant="flush" horizontal>
+            <ListGroup horizontal>
                 {users && users.map(function(user, i){
                         return (
                             <ListGroup.Item key = {i}>{user}</ListGroup.Item>
