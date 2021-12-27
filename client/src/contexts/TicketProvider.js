@@ -15,9 +15,8 @@ export function TicketProvider({ children }) {
   const socket = useSocket()
 
   const createTicket = useCallback((ticketName) => {
-    console.log(ticketName)
     setTickets(prevTickets => {
-      return [...prevTickets, { ticketName, employee: [] }]
+      return [...prevTickets, { ticketName, employee: [], outputReady:false }]
     })
   },[setTickets])
 
@@ -29,6 +28,7 @@ export function TicketProvider({ children }) {
     return () => socket.off('createTicket')
   },[socket, createTicket])
 
+  //------------------------------------------------------------------------------------------------------------------
   const addGuessToTicket = useCallback((guess) => {
     if(Object.keys(guess).length === 0) return
 
@@ -37,7 +37,8 @@ export function TicketProvider({ children }) {
 
     let guessToAdd = {
         name: guess.employee,
-        guess: guess.guess
+        guess: guess.guess,
+        ready:false
     }
 
     if(ticketToChange.employee){
@@ -64,6 +65,45 @@ export function TicketProvider({ children }) {
 
     return () => socket.off('addGuessToTicket')
   }, [socket, addGuessToTicket])
+
+  //------------------------------------------------------------------------------------------------------------------------
+  
+  //SET TRUE FOR READY FOR SINGLE EMPLOYEE
+  const addReadyToEmployee = useCallback((readyUp) =>{
+    let ticketsTemp = [...tickets]
+    let ticketToChange = {...ticketsTemp[readyUp.ticketId]}
+
+    if(ticketToChange.employee){
+      console.log(ticketToChange)
+
+      ticketToChange.employee.find(employee => employee.name == readyUp.employee).ready = true
+  
+      let ready = true
+      if(ticketToChange.employee.find((employee) => employee.ready == false)){
+        ready = false
+      }
+
+      console.log(ready)
+      if(ready){
+        ticketToChange.outputReady = true
+      }
+      
+      ticketsTemp[readyUp.ticketId] = ticketToChange
+        
+      return setTickets([...ticketsTemp])
+    }
+    console.log("test")
+    return
+  },[tickets])
+
+  useEffect(() => {
+    if(socket == null) return
+    
+    console.log("hello")
+    socket.on('setUserReadyForTicket', addReadyToEmployee)
+
+    return () => socket.off('setUserReadyForTicket')
+  }, [socket, addReadyToEmployee])
 
 
   const value = {

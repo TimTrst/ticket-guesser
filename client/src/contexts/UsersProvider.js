@@ -11,6 +11,7 @@ export function useUsers() {
 export function UsersProvider({ children }) {
   
     const [users, setUsers] = useState([])
+    
     const socket = useSocket()
 
     useEffect(() => {

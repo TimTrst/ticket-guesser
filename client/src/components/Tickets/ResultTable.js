@@ -12,10 +12,10 @@ export default function ResultTable({ index }) {
     }, [tickets])
 
     function calculateAverage(){
-        let avg = 0
+        var avg = 0
         let length = tickets[index].employee.length
 
-        tickets[index].employee.map((employee) => { avg += employee.guess })
+        tickets[index].employee.map((employee) => { avg = avg + +employee.guess })
 
         avg = avg / length
 
@@ -37,12 +37,17 @@ export default function ResultTable({ index }) {
                 tickets[index].employee.map(function(empList, i){
                     return (
                     <tr key = {i}>
-                        <td>{i}</td>
+                        <td>{i+1}</td>
                         <td>{empList.name}</td>
                         <td>{empList.guess}</td>
-                        <td>{averageTimeGuessed}</td>
                     </tr>)
                 })} 
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{averageTimeGuessed > 0 && averageTimeGuessed.toString()}</td>
+        	    </tr>
             </tbody>
         </Table>
     )

@@ -3,13 +3,14 @@ import { Row, Col, Form, Button, Toast } from 'react-bootstrap'
 import { useTickets } from '../../contexts/TicketProvider'
 import ResultTable from './ResultTable'
 import { useSocket } from '../../contexts/SocketProvider'
+import { useUsers } from '../../contexts/UsersProvider';
 
 export default function Tickets({ id, ticket, index }) {
 
     const socket = useSocket()
-    const { addGuessToTicket } = useTickets()
     const [validated, setValidated] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
+    const [checked, setChecked] = useState(false)
 
     const toggleShowAlert = () => setShowAlert(!showAlert)
 
@@ -23,7 +24,7 @@ export default function Tickets({ id, ticket, index }) {
         if(form.checkValidity() === false){
             e.stopPropagation()
         }
-        console.log(checkInput(guessRef.current.value))
+       
         if(checkInput(guessRef.current.value)){
             setValidated(true)
 
@@ -38,7 +39,17 @@ export default function Tickets({ id, ticket, index }) {
             setValidated(false)
             toggleShowAlert()
         }
+    }
 
+    function handleChecked(){
+        setChecked(true)
+
+        const readyUp = {
+            employee: id,
+            ticketId: index
+        }
+
+        socket.emit('setUserReadyForTicket', readyUp)
     }
 
     function checkInput(input){
@@ -66,11 +77,13 @@ export default function Tickets({ id, ticket, index }) {
                     type="checkbox"
                     id="checkboxReady"
                     label="ready up"
+                    checked={checked}
+                    onChange={handleChecked}
                 />
             </Form>
         </Col>
         <Col>
-            <ResultTable index={index}/>
+            {ticket.outputReady && <ResultTable index={index}/>}
         </Col>
         <Toast className="toastAlert" bg="warning" show={showAlert} onClick={toggleShowAlert}>
             <Toast.Body>Input must be a number!</Toast.Body>
