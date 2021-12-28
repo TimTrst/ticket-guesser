@@ -2,15 +2,11 @@ import { useEffect, useState } from 'react'
 
 const PREFIX = 'ticket-guesser-'
 
-export function deleteItem(id){
-    localStorage.removeItem(PREFIX + id)
-}
-
-export default function useLocalStorage( key, initialValue ) {
+export default function useSessionStorage( key, initialValue ) {
    const  prefixedKey = PREFIX + key
 
    const [value, setValue] = useState(() => {
-       const jsonValue = localStorage.getItem(prefixedKey)
+       const jsonValue = sessionStorage.getItem(prefixedKey)
 
        if(jsonValue !== null) {
            return JSON.parse(jsonValue)
@@ -24,7 +20,7 @@ export default function useLocalStorage( key, initialValue ) {
    })
 
    useEffect(() => {
-        localStorage.setItem(prefixedKey, JSON.stringify(value)) 
+        sessionStorage.setItem(prefixedKey, JSON.stringify(value))
    },[prefixedKey, value])
 
    return [value, setValue]

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react'
-import useLocalStorage from '../hooks/useLocalStorage';
+import useSessionStorage from '../hooks/useSessionStorage'
 
-import { useSocket } from './SocketProvider';
+import { useSocket } from './SocketProvider'
 
 const TicketContext = React.createContext()
 
@@ -10,7 +10,7 @@ export function useTickets() {
 }
 
 export function TicketProvider({ children }) {
-  const [tickets, setTickets] = useLocalStorage('tickets', [])
+  const [tickets, setTickets] = useSessionStorage('tickets', [])
 
   const socket = useSocket()
 

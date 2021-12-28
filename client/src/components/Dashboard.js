@@ -4,6 +4,7 @@ import "../css/Dashboard.css"
 
 import { useSocket } from '../contexts/SocketProvider'
 import { useTickets } from '../contexts/TicketProvider'
+import useLocalStorage, {deleteItem} from '../hooks/useLocalStorage'
 import Tickets from './Tickets/Tickets'
 import Users from './Users'
 
@@ -23,19 +24,14 @@ export default function Dashboard({id}) {
     }
 
     function handleResetLocalStorage(){
-      localStorage.clear()
+      deleteItem("id")
+      //localStorage.removeItem("ticket-guesser-id")
     }
-
-    useEffect(() => {
-      return () => {
-        handleResetLocalStorage()
-      }
-    },[])
 
     return (
       <div>
         <Container className="createTicketContainer">
-          <Button className="resetLocalStorage mb-5" onClick={handleResetLocalStorage}>Reset LocalStorage</Button>
+          <Button className="resetLocalStorage mb-5" onClick={handleResetLocalStorage}>Logout</Button>
 
           {id !== undefined && <Users id={id}/>}
 

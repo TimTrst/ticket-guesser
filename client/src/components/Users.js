@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { ListGroup, Card } from 'react-bootstrap'
 
-import { useSocket } from '../contexts/SocketProvider';
 import { useUsers } from '../contexts/UsersProvider';
  
 export default function Users({id}) {
