@@ -11,6 +11,7 @@ export default function Tickets({ id, ticket, index }) {
     const [validated, setValidated] = useState(false)
     const [showAlert, setShowAlert] = useState(false)
     const [checked, setChecked] = useState(false)
+    const [checkBoxDisabled, setCheckBoxDisabled] = useState(true)
 
     const toggleShowAlert = () => setShowAlert(!showAlert)
 
@@ -35,6 +36,7 @@ export default function Tickets({ id, ticket, index }) {
             }
 
             socket.emit('addGuessToTicket', guess)
+            setCheckBoxDisabled(false)
         }else{
             setValidated(false)
             toggleShowAlert()
@@ -79,6 +81,7 @@ export default function Tickets({ id, ticket, index }) {
                     label="ready up"
                     checked={checked}
                     onChange={handleChecked}
+                    disabled={checkBoxDisabled}
                 />
             </Form>
         </Col>

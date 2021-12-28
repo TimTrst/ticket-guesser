@@ -99,7 +99,6 @@ export function TicketProvider({ children }) {
   useEffect(() => {
     if(socket == null) return
     
-    console.log("hello")
     socket.on('setUserReadyForTicket', addReadyToEmployee)
 
     return () => socket.off('setUserReadyForTicket')

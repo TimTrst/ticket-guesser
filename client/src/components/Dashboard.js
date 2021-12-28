@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef, useEffect} from 'react'
 import { Container, Form, Button, Row, ListGroup, Card} from 'react-bootstrap'
 import "../css/Dashboard.css"
 
@@ -9,7 +9,7 @@ import Users from './Users'
 
 export default function Dashboard({id}) {
 
-    const { createTicket, tickets } = useTickets() 
+    const { tickets } = useTickets() 
     
     const socket = useSocket()
     const idRef = useRef()
@@ -19,13 +19,18 @@ export default function Dashboard({id}) {
         
         if(socket != null){
           socket.emit('createTicket', idRef.current.value)
-          //createTicket(idRef.current.value)
         }
     }
 
     function handleResetLocalStorage(){
       localStorage.clear()
     }
+
+    useEffect(() => {
+      return () => {
+        handleResetLocalStorage()
+      }
+    },[])
 
     return (
       <div>
