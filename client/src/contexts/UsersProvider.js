@@ -22,6 +22,7 @@ export function UsersProvider({ children }) {
     }, [socket])
     
     const setNewUsers = useCallback((connectedUsers) => {
+      console.log(connectedUsers)
         setUsers(connectedUsers)
     }, [setUsers])
 

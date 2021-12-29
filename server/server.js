@@ -1,35 +1,88 @@
 const io = require('socket.io')(5000)
 
-let connectedUsers = []
-let counter = 0
+let rooms = []
+let counter = 1
 
 io.on('connection', socket => {
-    var room = "ticketRoom"
-
+    
     let id = socket.handshake.query.id
+    let room = socket.handshake.query.room
 
-    if((connectedUsers.find((user) => id == user))){
-        id = id + " (" + counter + ")"
-        counter++
+    if(room !== -1 || room !== ""){
+        const newRoom = {
+            roomName: room,
+            connectedUsers: [id]
+        }
+    
+        let roomsCopy = rooms
+        if(rooms.length != 0 ){
+    
+            let roomTemp = roomsCopy.find((r) => r.roomName == room)
+    
+            if(roomTemp)
+            {
+                if(roomTemp.connectedUsers.find((user) => id == user))
+                {
+                    id = id + " (" + counter + ")"
+                    counter++
+                }
+                
+                roomsCopy.map((r) => {
+                    r.roomName == roomTemp.roomName && r.connectedUsers.push(id)
+                })
+            }
+            else {roomsCopy.push(newRoom)}
+        }
+        else {
+            roomsCopy.push(newRoom)
+        }
+        rooms = roomsCopy
+    
+        socket.join(id)
+        socket.join(room)        
     }
-    connectedUsers.push(id)
-
-    socket.join(id)
-    socket.join(room)
     
     socket.on('returnUsers', () => {
-        io.to(room).emit('setNewUsers', connectedUsers)
-        console.log(connectedUsers)
+        io.to(room).emit('setNewUsers', returnAllUsersInRoom(room))
     })
     
+    //USER DISCONNECT
     socket.on('disconnect', function() {
         console.log("disconnect: ", socket.id);
         
-        const index = connectedUsers.indexOf(id)
-        if(index > -1){
-            connectedUsers.splice(index, 1)
+        let userIndex = -1
+        let usersInRoom = returnAllUsersInRoom(room)
+
+        let roomIndex = 0
+        let indexTemp = 0
+
+        rooms.forEach(element => {
+            if(element.roomName === room){
+                roomIndex = indexTemp
+            }
+            indexTemp++
+        })
+
+        //Nutzer aus Raum entfernen
+        userIndex = usersInRoom.indexOf(id)
+
+        if(userIndex > -1){
+            if(rooms.length > 0){
+                if(room){
+                    console.log(userIndex)
+                    rooms[roomIndex].connectedUsers.splice(userIndex,1)
+                }
+            }
         }
-        io.to(room).emit('setNewUsers', connectedUsers)
+
+        console.log(returnAllUsersInRoom(room).length === 0)
+        //Raum entfernen, wenn leer
+        if(returnAllUsersInRoom(room).length == 0){
+            rooms.splice(roomIndex, 1)
+            console.log(rooms)
+        }
+        
+        io.to(room).emit('setNewUsers', returnAllUsersInRoom(room))
     });
 
     socket.on('createTicket', (ticketName) => {
@@ -44,3 +97,16 @@ io.on('connection', socket => {
         io.to(room).emit('setUserReadyForTicket', readyUp)
     })
 })
+
+function returnAllUsersInRoom(room){
+    if(Object.keys(room).length !== 0){
+        let r = rooms.find((r) => r.roomName == room)
+        if(r){
+            return r.connectedUsers
+        }else{
+            return []
+        }
+    }else{
+        return []
+    }
+}

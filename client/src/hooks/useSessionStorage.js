@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 
 const PREFIX = 'ticket-guesser-'
 
+export function deleteSessionStorage(){
+    sessionStorage.clear()
+}
+
 export default function useSessionStorage( key, initialValue ) {
    const  prefixedKey = PREFIX + key
 

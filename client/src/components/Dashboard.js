@@ -5,12 +5,13 @@ import "../css/Dashboard.css"
 import { useSocket } from '../contexts/SocketProvider'
 import { useTickets } from '../contexts/TicketProvider'
 import useLocalStorage, {deleteItem} from '../hooks/useLocalStorage'
+import { deleteSessionStorage } from '../hooks/useSessionStorage'
 import Tickets from './Tickets/Tickets'
 import Users from './Users'
 
 export default function Dashboard({id}) {
 
-    const { tickets } = useTickets() 
+    const { tickets } = useTickets()
     
     const socket = useSocket()
     const idRef = useRef()
@@ -24,8 +25,9 @@ export default function Dashboard({id}) {
     }
 
     function handleResetLocalStorage(){
-      deleteItem("id")
-      //localStorage.removeItem("ticket-guesser-id")
+        deleteItem("id")
+        deleteSessionStorage()
+        window.location.reload(true)
     }
 
     return (
