@@ -91,7 +91,6 @@ export default function Tickets({ id, ticket, index }) {
         <Toast className="toastAlert" bg="warning" show={showAlert} onClick={toggleShowAlert}>
             <Toast.Body>Input must be a number!</Toast.Body>
         </Toast>
-        <h4>{index}</h4>
     </Row>    
     )
 }

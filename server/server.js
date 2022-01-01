@@ -62,13 +62,12 @@ io.on('connection', socket => {
 
         let ticketIndex = roomTemp.tickets.length
         ticketIndex = ticketIndex - 1
-        console.log(ticketIndex)
 
         const ticketInfo = {
             ticketName: ticketName,
             ticketIndex: ticketIndex
         }
-
+        
         io.to(room).emit('createTicket', {ticketInfo})
     })
 
@@ -81,13 +80,24 @@ io.on('connection', socket => {
     })
 
     socket.on('resetTickets', () => {
+        let roomsCopy = rooms
+        //let roomTemp = findRoom(room)
+
+        //roomTemp.tickets = []
+
+        roomsCopy.map((r) => {
+            if(r.roomName == room){
+                r.tickets = []
+            }
+        })
+
         io.to(room).emit('resetTickets')
     })
 })
 
 function returnAllUsersInRoom(room){
     if(Object.keys(room).length !== 0){
-        let r = rooms.find((r) => r.roomName == room)
+        let r = findRoom(room)
         if(r){
             return r.connectedUsers
         }else{
@@ -108,7 +118,7 @@ function setUserInRoom(room, id){
     let roomsCopy = rooms
     if(rooms.length != 0 ){
 
-        let roomTemp = roomsCopy.find((r) => r.roomName == room)
+        let roomTemp = findRoom(room)
 
         if(roomTemp)
         {
@@ -128,4 +138,8 @@ function setUserInRoom(room, id){
         roomsCopy.push(newRoom)
     }
     rooms = roomsCopy
+}
+
+function findRoom(room){
+    return rooms.find((r) => r.roomName == room)
 }

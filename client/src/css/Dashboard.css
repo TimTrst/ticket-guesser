@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+.guessMain{
+    font-family: "Poppins", sans-serif;
+}
+
 .ticketCard{
     margin-left: 15%;
     margin-right: 15%;
@@ -9,3 +15,26 @@
     bottom: 10px;
     margin-left: -104.5px;
 }
+
+.userCard{
+    padding: 10px;
+}
+
+.userIcon{
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.resultTable{
+    border-collapse: separate;
+    border: thin solid rgba(59, 59, 59, 0.247);
+    border-radius: 3px;
+    margin: 25px 0;
+    font-size: 0.9em;
+    min-width: 400px;
+}
+
+.bottomRow{
+    border-bottom: rgb(255, 255, 255);
+}
+

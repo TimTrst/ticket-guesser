@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Table } from "react-bootstrap"
+import "../../css/Dashboard.css"
 import { useTickets } from '../../contexts/TicketProvider'
 
 export default function ResultTable({ index }) {
@@ -23,7 +24,7 @@ export default function ResultTable({ index }) {
     }
 
     return (
-        <Table>
+        <Table className="resultTable">
             <thead>
                 <tr>
                     <th>#</th>
@@ -42,7 +43,7 @@ export default function ResultTable({ index }) {
                         <td>{empList.guess}</td>
                     </tr>)
                 })} 
-                <tr>
+                <tr className={"bottomRow"}>
                     <td></td>
                     <td></td>
                     <td></td>

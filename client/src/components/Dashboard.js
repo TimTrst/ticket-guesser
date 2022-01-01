@@ -8,7 +8,7 @@ import useLocalStorage, {deleteItem} from '../hooks/useLocalStorage'
 import { deleteSessionStorage } from '../hooks/useSessionStorage'
 import Tickets from './Tickets/Tickets'
 import Users from './Users'
-import { io } from 'socket.io-client'
+
 
 export default function Dashboard({id}) {
 
@@ -50,7 +50,7 @@ export default function Dashboard({id}) {
     }, [socket, resetTickets])
 
     return (
-      <div>
+      <div className ="guessMain">
         <Container className="createTicketContainer">
           <Button className="resetLocalStorage mb-5" onClick={handleResetLocalStorage}>Logout</Button>
 

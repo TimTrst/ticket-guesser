@@ -15,7 +15,7 @@ export default function Login( { onIdSubmit, setRoom } ){
 
     return (
         <Container className="loginContainer">
-          <Form onSubmit={ handleSubmit } className="w-100">
+          <Form onSubmit={ handleSubmit } className="w-100 loginForm">
             <Form.Group>
               <Form.Label>Your Id</Form.Label>
               <Form.Control className="inputId" type="text" ref={idRef} required />

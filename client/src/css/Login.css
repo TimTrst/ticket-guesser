@@ -1,7 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
 .loginContainer{
+    font-family: "Poppins", sans-serif;
     height: 100vh;
+    width: 100%;
+    position: relative;
     align-items: center;
     display: flex;
+    margin: 0;
+    background: rgb(63, 108, 231);
+}
+
+.loginForm{
+    max-width: 450px;
+    position: absolute;
+    left: 31%;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    padding: 30px;
+    width: 90%;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    text-align: center;
+    justify-content: center;
 }
 
 .inputId{
@@ -10,5 +32,6 @@
 
 .submitButton{
     margin-right:10px;
+    margin-top: 15px;
 }
 
