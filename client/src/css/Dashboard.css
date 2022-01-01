@@ -1,8 +1,11 @@
-.createTicketContainer{
-    
-}
-
 .ticketCard{
     margin-left: 15%;
     margin-right: 15%;
+}
+
+.clearTicketsButton{
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    margin-left: -104.5px;
 }

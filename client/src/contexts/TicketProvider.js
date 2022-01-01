@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react'
+import React, { useContext, useEffect, useCallback } from 'react'
 import useSessionStorage from '../hooks/useSessionStorage'
 
 import { useSocket } from './SocketProvider'
@@ -14,9 +14,11 @@ export function TicketProvider({ children }) {
 
   const socket = useSocket()
 
-  const createTicket = useCallback((ticketName) => {
+  const createTicket = useCallback(({ticketInfo}) => {
+    let ticketName = ticketInfo.ticketName
+
     setTickets(prevTickets => {
-      return [...prevTickets, { ticketName, employee: [], outputReady:false }]
+      return [...prevTickets, {ticketName , employee: [], outputReady: false }]
     })
   },[setTickets])
 
@@ -38,12 +40,12 @@ export function TicketProvider({ children }) {
     let guessToAdd = {
         name: guess.employee,
         guess: guess.guess,
-        ready:false
+        ready: false
     }
 
     if(ticketToChange.employee){
-      if(ticketToChange.employee.find((employee => employee.name == guess.employee))){
-        ticketToChange.employee.find(employee => employee.name == guess.employee).guess = guess.guess
+      if(ticketToChange.employee.find((employee => employee.name === guess.employee))){
+        ticketToChange.employee.find(employee => employee.name === guess.employee).guess = guess.guess
         
         ticketsTemp[guess.ticketId] = ticketToChange
         
@@ -74,16 +76,13 @@ export function TicketProvider({ children }) {
     let ticketToChange = {...ticketsTemp[readyUp.ticketId]}
 
     if(ticketToChange.employee){
-      console.log(ticketToChange)
-
-      ticketToChange.employee.find(employee => employee.name == readyUp.employee).ready = true
+      ticketToChange.employee.find(employee => employee.name === readyUp.employee).ready = true
   
       let ready = true
-      if(ticketToChange.employee.find((employee) => employee.ready == false)){
+      if(ticketToChange.employee.find((employee) => employee.ready === false)){
         ready = false
       }
 
-      console.log(ready)
       if(ready){
         ticketToChange.outputReady = true
       }
@@ -92,7 +91,6 @@ export function TicketProvider({ children }) {
         
       return setTickets([...ticketsTemp])
     }
-    console.log("test")
     return
   },[tickets])
 
@@ -107,6 +105,7 @@ export function TicketProvider({ children }) {
 
   const value = {
     tickets: tickets,
+    setTickets: setTickets,
     createTicket,
     addGuessToTicket: addGuessToTicket,
    }
@@ -116,16 +115,4 @@ export function TicketProvider({ children }) {
       {children}
     </TicketContext.Provider>
   )
-}
-
-
-function arrayEquality(a, b) {
-  if (a.length !== b.length) return false
-
-  a.sort()
-  b.sort()
-
-  return a.every((element, index) => {
-    return element === b[index]
-  })
 }

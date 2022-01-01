@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage'
 import Login from './Login'
 import Dashboard from './Dashboard'
-//import Rooms from './Rooms'
 import { SocketProvider } from '../contexts/SocketProvider'
 import { TicketProvider } from '../contexts/TicketProvider'
 import { UsersProvider } from '../contexts/UsersProvider'
@@ -23,7 +22,7 @@ function App() {
   )
 
   return (
-      id ? dashboard : <Login onIdSubmit={ setId } setRoom={ setRoom }/>
+      id && room !== "" ? dashboard : <Login onIdSubmit={ setId } setRoom={ setRoom }/>
   );
 }
 

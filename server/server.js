@@ -9,34 +9,8 @@ io.on('connection', socket => {
     let room = socket.handshake.query.room
 
     if(room !== -1 || room !== ""){
-        const newRoom = {
-            roomName: room,
-            connectedUsers: [id]
-        }
-    
-        let roomsCopy = rooms
-        if(rooms.length != 0 ){
-    
-            let roomTemp = roomsCopy.find((r) => r.roomName == room)
-    
-            if(roomTemp)
-            {
-                if(roomTemp.connectedUsers.find((user) => id == user))
-                {
-                    id = id + " (" + counter + ")"
-                    counter++
-                }
-                
-                roomsCopy.map((r) => {
-                    r.roomName == roomTemp.roomName && r.connectedUsers.push(id)
-                })
-            }
-            else {roomsCopy.push(newRoom)}
-        }
-        else {
-            roomsCopy.push(newRoom)
-        }
-        rooms = roomsCopy
+        
+        setUserInRoom(room, id)
     
         socket.join(id)
         socket.join(room)        
@@ -69,24 +43,33 @@ io.on('connection', socket => {
         if(userIndex > -1){
             if(rooms.length > 0){
                 if(room){
-                    console.log(userIndex)
                     rooms[roomIndex].connectedUsers.splice(userIndex,1)
                 }
             }
         }
 
-        console.log(returnAllUsersInRoom(room).length === 0)
         //Raum entfernen, wenn leer
         if(returnAllUsersInRoom(room).length == 0){
             rooms.splice(roomIndex, 1)
-            console.log(rooms)
         }
         
         io.to(room).emit('setNewUsers', returnAllUsersInRoom(room))
     });
 
     socket.on('createTicket', (ticketName) => {
-        io.to(room).emit('createTicket', ticketName)
+        let roomTemp = rooms.find((r) => r.roomName === room)
+        roomTemp.tickets.push(ticketName)
+
+        let ticketIndex = roomTemp.tickets.length
+        ticketIndex = ticketIndex - 1
+        console.log(ticketIndex)
+
+        const ticketInfo = {
+            ticketName: ticketName,
+            ticketIndex: ticketIndex
+        }
+
+        io.to(room).emit('createTicket', {ticketInfo})
     })
 
     socket.on('addGuessToTicket', (guess) => {
@@ -95,6 +78,10 @@ io.on('connection', socket => {
 
     socket.on('setUserReadyForTicket', (readyUp) => {
         io.to(room).emit('setUserReadyForTicket', readyUp)
+    })
+
+    socket.on('resetTickets', () => {
+        io.to(room).emit('resetTickets')
     })
 })
 
@@ -109,4 +96,36 @@ function returnAllUsersInRoom(room){
     }else{
         return []
     }
+}
+
+function setUserInRoom(room, id){
+    const newRoom = {
+        roomName: room,
+        connectedUsers: [id],
+        tickets: []
+    }
+
+    let roomsCopy = rooms
+    if(rooms.length != 0 ){
+
+        let roomTemp = roomsCopy.find((r) => r.roomName == room)
+
+        if(roomTemp)
+        {
+            if(roomTemp.connectedUsers.find((user) => id == user))
+            {
+                id = id + " (" + counter + ")"
+                counter++
+            }
+            
+            roomsCopy.map((r) => {
+                r.roomName == roomTemp.roomName && r.connectedUsers.push(id)
+            })
+        }
+        else {roomsCopy.push(newRoom)}
+    }
+    else {
+        roomsCopy.push(newRoom)
+    }
+    rooms = roomsCopy
 }
